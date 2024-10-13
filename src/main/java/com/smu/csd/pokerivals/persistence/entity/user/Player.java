@@ -1,10 +1,8 @@
 package com.smu.csd.pokerivals.persistence.entity.user;
 
-import com.smu.csd.pokerivals.persistence.entity.Clan;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,22 +10,27 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
 @Entity
 @NoArgsConstructor
+@Setter
+@Getter
 public class Player extends User {
 
-    @Setter
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private double points = 800.0;
 
-    public Player(String username, String googleSub) {
-        super(username, googleSub);
+    public Player(String username, String googleId) {
+        super(username, googleId);
     }
 
+    @Getter
     @ManyToMany
+    @JsonIgnore
     private Set<Player> befriendedBy = new HashSet<>();
 
+    @Getter
     @ManyToMany(mappedBy = "befriendedBy")
+    @JsonIgnore
     private Set<Player> friendsWith = new HashSet<>();
 
     public void addFriend(Player p){
@@ -42,13 +45,14 @@ public class Player extends User {
         this.befriendedBy.remove(p);
         p.friendsWith.remove(this);
 
-        p.befriendedBy.remove(this);
         this.friendsWith.remove(p);
+        p.befriendedBy.remove(this);
     }
-
 
     @ManyToOne
     @JoinColumn(name = "fk_clan")
+    @Getter
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Clan clan;
 
     public void addToClan(Clan c){
