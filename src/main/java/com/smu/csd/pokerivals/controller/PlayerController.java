@@ -48,7 +48,7 @@ public class PlayerController {
     @Operation(summary= "Register player",
             description = "Registers a player for an account")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Player registered successfully.",
+            @ApiResponse(responseCode = "201", description = "Player registered successfully.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Message.class)) }),
             @ApiResponse(responseCode = "400", description = "Player failed to be registered.",
