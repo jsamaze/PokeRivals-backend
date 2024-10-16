@@ -1,18 +1,15 @@
 package com.smu.csd.pokerivals.persistence.repository;
 
 import com.smu.csd.pokerivals.persistence.entity.user.Player;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
-public interface PlayerRepository extends JpaRepository<Player,String> {
-    List<Player> findByUsernameContaining(String query);
-
+public interface PlayerPagingRepository extends PagingAndSortingRepository<Player, String> {
     @Query("select p from Player p join p.befriendedBy bB join p.friendsWith fW " +
             "where bB.username = :username and fW.username = :username")
-    List<Player> findFriendsOfPlayer(@Param("username") String username);
+    List<Player> findFriendsOfPlayer(@Param("username") String username, Pageable pageable);
 }

@@ -15,9 +15,12 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/player")
@@ -57,6 +60,45 @@ public class PlayerController {
     public Message register(@RequestBody @Valid PlayerRegistrationDTO dto) throws UnsupportedEncodingException{
         playerService.register(dto.getPlayer(), dto.getAuthentication());
         return new Message("Player registered successfully");
+    }
+
+    @PostMapping("me/friend/{username}")
+    @Operation(summary = "add friend for the logged-in user and the given username")
+    public Message addFriend(@PathVariable String username,@AuthenticationPrincipal UserDetails userDetails) throws UnsupportedEncodingException{
+        playerService.connectAsFriends(userDetails.getUsername(),username);
+        return new Message("Become friends successfully");
+    }
+
+    @DeleteMapping("me/friend/{username}")
+    @Operation(summary = "remove friend for the logged-in user and the given username")
+    public Message removeFriend(@PathVariable String username,@AuthenticationPrincipal UserDetails userDetails) throws UnsupportedEncodingException{
+        playerService.disconnectAsFriends(userDetails.getUsername(),username);
+        return new Message("Removed friends connectionsuccessfully");
+    }
+
+    @GetMapping("me/friend")
+    @Operation(summary ="get my friends in a paged way")
+    public List<Player> getFriends(@AuthenticationPrincipal UserDetails userDetails){
+        return playerService.getFriendsOf(userDetails.getUsername());
+    }
+
+    @GetMapping("")
+    @Operation(summary ="get user by searching username")
+    public List<Player> getFriends(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String query){
+        return playerService.searchPlayers(query);
+    }
+
+    @GetMapping("{username}")
+    @Operation(summary = "get player details")
+    public Player getPlayer(@PathVariable String username) {
+        return playerService.getUser(username);
+    }
+
+    @PatchMapping("me/clan/{clanName}")
+    @Operation(summary = "set my clan")
+    public  Message setClan(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String clanName){
+        playerService.addToClan(userDetails.getUsername(),clanName);
+        return new Message("Added to clan successfully");
     }
 
 
