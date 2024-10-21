@@ -28,10 +28,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
 import lombok.Setter;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 /** Start an actual HTTP server listening at a random port */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class SpringBootIntegrationTest {
+@ActiveProfiles("test")
+class PokerivalsBackendApplicationTests {
 
 	@LocalServerPort
 	private int port;
