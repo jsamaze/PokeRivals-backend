@@ -1,10 +1,11 @@
-package com.smu.csd.pokerivals.persistence.repository;
+package com.smu.csd.pokerivals.user.repository;
 
-import com.smu.csd.pokerivals.persistence.entity.user.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
+
+import com.smu.csd.pokerivals.user.entity.Player;
 
 import java.util.List;
 

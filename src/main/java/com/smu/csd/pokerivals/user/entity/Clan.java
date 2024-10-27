@@ -1,4 +1,4 @@
-package com.smu.csd.pokerivals.persistence.entity.user;
+package com.smu.csd.pokerivals.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
@@ -12,6 +12,9 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Pokemon Clan a Player can take part In
+ */
 @NoArgsConstructor
 @Entity
 @Getter
@@ -30,4 +33,10 @@ public class Clan {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "Clan{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

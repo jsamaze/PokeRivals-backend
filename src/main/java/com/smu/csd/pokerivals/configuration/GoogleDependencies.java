@@ -1,4 +1,4 @@
-package com.smu.csd.pokerivals.config;
+package com.smu.csd.pokerivals.configuration;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -16,11 +16,14 @@ public class GoogleDependencies {
     private String googleClientId;
 
     @Bean
-    public GoogleIdTokenVerifier googleIdTokenVerifier(){
+	public GoogleIdTokenVerifier googleIdTokenVerifier(){
 
-        return  new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
-                .setAudience(Collections.singletonList(googleClientId))
-                .build();
-    }
+		return  new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
+		// Specify the CLIENT_ID of the app that accesses the backend:
+		.setAudience(Collections.singletonList(googleClientId))
+		// Or, if multiple clients access the backend:
+		//.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
+		.build();
+	}
 
 }

@@ -1,6 +1,6 @@
-package com.smu.csd.pokerivals.persistence.repository;
+package com.smu.csd.pokerivals.user.repository;
 
-import com.smu.csd.pokerivals.persistence.entity.user.Player;
+import com.smu.csd.pokerivals.user.entity.Player;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;

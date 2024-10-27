@@ -1,4 +1,4 @@
-package com.smu.csd.pokerivals.config;
+package com.smu.csd.pokerivals.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;

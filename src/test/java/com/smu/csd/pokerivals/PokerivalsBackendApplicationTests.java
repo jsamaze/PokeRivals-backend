@@ -39,7 +39,7 @@ class PokerivalsBackendApplicationTests {
 	@LocalServerPort
 	private int port;
 
-	private final String baseUrl = "http://localhost:";
+	private final String baseUrl = "http://127.0.0.1:";
 
 	@Autowired
 	private TestRestTemplate restTemplate;

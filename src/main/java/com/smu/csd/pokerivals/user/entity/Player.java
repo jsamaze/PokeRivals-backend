@@ -1,8 +1,11 @@
-package com.smu.csd.pokerivals.persistence.entity.user;
+package com.smu.csd.pokerivals.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +25,10 @@ public class Player extends User {
     public Player(String username, String googleId) {
         super(username, googleId);
     }
-
+    public Player (String username, String googleId , double points){
+        super(username , googleId);
+        this.points = points;
+    }
     @Getter
     @ManyToMany
     @JsonIgnore
@@ -63,4 +69,31 @@ public class Player extends User {
         c.getMembers().add(this);
     }
 
+
+    public int getNoOfFriends(){
+        if (befriendedBy.size() != friendsWith.size()){
+            throw new IllegalStateException();
+        }
+        return befriendedBy.size();
+    }
+
+    public void changeElo(Player enemy, boolean enemyWin){
+        if (enemy instanceof DummyPlayer){
+            return;
+        }
+        if(enemyWin){
+            this.points += 10.0;
+            enemy.points -= 10.0;
+        }
+    }
+
+    private static final class DummyPlayer extends Player{
+        private String Username = "dummy";
+        private final double rating = 0.0;
+
+        @Override
+        public void changeElo(Player enemy, boolean enemyWin){
+            return;
+        }
+    }
 }

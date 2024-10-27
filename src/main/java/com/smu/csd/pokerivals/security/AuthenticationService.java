@@ -1,8 +1,5 @@
-package com.smu.csd.pokerivals.service;
+package com.smu.csd.pokerivals.security;
 
-import com.smu.csd.pokerivals.security.authentication.IncompleteGoogleAuthentication;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -12,9 +9,14 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
 
+import com.smu.csd.pokerivals.security.authentication.IncompleteGoogleAuthentication;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 @Service
 public class AuthenticationService {
-
+    
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -25,7 +27,7 @@ public class AuthenticationService {
         Authentication authentication = authenticationManager.authenticate(token);
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authentication);
+        context.setAuthentication(authentication); 
         securityContextRepository.saveContext(context, request, response);
         return authentication;
     }
@@ -39,4 +41,3 @@ public class AuthenticationService {
         }
     }
 }
-

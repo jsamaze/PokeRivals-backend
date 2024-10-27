@@ -1,9 +1,9 @@
-package com.smu.csd.pokerivals.controller;
+package com.smu.csd.pokerivals.user.controller;
 
 
-import com.smu.csd.pokerivals.persistence.entity.user.Admin;
+import com.smu.csd.pokerivals.user.entity.Admin;
 import com.smu.csd.pokerivals.record.Message;
-import com.smu.csd.pokerivals.service.AdminService;
+import com.smu.csd.pokerivals.user.service.AdminService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,11 +22,12 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/admin")
+@CrossOrigin
 public class AdminController {
-    private AdminService service;
+    private final AdminService service;
 
     @Autowired
-    public AdminController(AdminService service){
+    public AdminController (AdminService service){
         this.service = service;
     }
 
@@ -69,6 +70,7 @@ public class AdminController {
         return new Message("Sent email!");
     }
 
+
     @PostMapping("/link")
     @Operation(summary="Link admin account with Google email", description = "Link admin account with Google email")
     @ApiResponses(value = {
@@ -97,6 +99,7 @@ public class AdminController {
                             schema = @Schema(implementation = Message.class)) })})
     public List<Admin> getInvitees(@AuthenticationPrincipal UserDetails userDetails){
         return service.getInvitees(userDetails.getUsername());
+
     }
 
 

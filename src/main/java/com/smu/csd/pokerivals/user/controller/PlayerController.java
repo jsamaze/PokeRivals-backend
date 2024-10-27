@@ -1,11 +1,10 @@
-package com.smu.csd.pokerivals.controller;
+package com.smu.csd.pokerivals.user.controller;
 
-import com.smu.csd.pokerivals.persistence.entity.user.Player;
 import com.smu.csd.pokerivals.record.Message;
 import com.smu.csd.pokerivals.security.authentication.IncompleteGoogleAuthentication;
-import com.smu.csd.pokerivals.service.PlayerService;
+import com.smu.csd.pokerivals.user.entity.Player;
+import com.smu.csd.pokerivals.user.service.PlayerService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,6 +13,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/player")
+@CrossOrigin
 public class PlayerController {
 
     private final PlayerService playerService;
@@ -33,10 +35,16 @@ public class PlayerController {
         this.playerService = service;
     }
 
+    @NoArgsConstructor
     @Getter
     public static class PlayerRegistrationDTO {
 
         private Player player;
+
+        public PlayerRegistrationDTO(String credentials, Player player) {
+            this.credentials = credentials;
+            this.player = player;
+        }
 
         @NotEmpty(message = "Google ID token must be provided")
         @NotNull(message = "Google ID cannot be null")
@@ -57,7 +65,7 @@ public class PlayerController {
             @ApiResponse(responseCode = "400", description = "Player failed to be registered.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Message.class)) })})
-    public Message register(@RequestBody @Valid PlayerRegistrationDTO dto) throws UnsupportedEncodingException{
+    public Message register(@RequestBody @Valid PlayerRegistrationDTO dto) throws UnsupportedEncodingException, JdbcSQLIntegrityConstraintViolationException {
         playerService.register(dto.getPlayer(), dto.getAuthentication());
         return new Message("Player registered successfully");
     }
@@ -77,7 +85,7 @@ public class PlayerController {
                             schema = @Schema(implementation = Message.class)) })})
     public Message addFriend(@PathVariable String username,@AuthenticationPrincipal UserDetails userDetails) throws UnsupportedEncodingException{
         playerService.connectAsFriends(userDetails.getUsername(),username);
-        return new Message("Added friend successfully");
+        return new Message("Become friends successfully");
     }
 
     @DeleteMapping("me/friend/{username}")
@@ -95,7 +103,7 @@ public class PlayerController {
                             schema = @Schema(implementation = Message.class)) })})
     public Message removeFriend(@PathVariable String username,@AuthenticationPrincipal UserDetails userDetails) throws UnsupportedEncodingException{
         playerService.disconnectAsFriends(userDetails.getUsername(),username);
-        return new Message("Removed friend successfully");
+        return new Message("Removed friends connectionsuccessfully");
     }
 
     @GetMapping("me/friend")
@@ -125,8 +133,8 @@ public class PlayerController {
             @ApiResponse(responseCode = "400", description = "Failed to get users.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Message.class)) })})
-    public List<Player> getUsers(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String query){
-        return playerService.searchPlayers(query);
+    public List<Player> getFriends(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String query){
+        return playerService.searchPlayersByUsername(query);
     }
 
     @GetMapping("{username}")
@@ -160,8 +168,8 @@ public class PlayerController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Message.class)) })})
     public  Message setClan(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String clanName){
-        playerService.addToClan(userDetails.getUsername(),clanName);
-        return new Message("Set clan successfully");
+        playerService.addToClan(userDetails.getUsername(),clanName.toLowerCase());
+        return new Message("Added to clan successfully");
     }
 
 
