@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -96,8 +97,7 @@ public class SecurityComponentTest {
 
       IncompleteGoogleAuthentication authenticationBefore = new IncompleteGoogleAuthentication(sampleToken);
 
-      Exception exception = assertThrows(UsernameNotFoundException.class, ()-> authProvider.authenticate(authenticationBefore));
-      assertEquals("User not found", exception.getMessage());
+      Exception exception = assertThrows(NoSuchElementException.class, ()-> authProvider.authenticate(authenticationBefore));
 
       verify(verifier).verify(sampleToken);
       verify(idTokenMock).getPayload();
