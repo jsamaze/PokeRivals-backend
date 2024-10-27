@@ -14,7 +14,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -65,7 +64,7 @@ public class PlayerController {
             @ApiResponse(responseCode = "400", description = "Player failed to be registered.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Message.class)) })})
-    public Message register(@RequestBody @Valid PlayerRegistrationDTO dto) throws UnsupportedEncodingException, JdbcSQLIntegrityConstraintViolationException {
+    public Message register(@RequestBody @Valid PlayerRegistrationDTO dto) throws UnsupportedEncodingException {
         playerService.register(dto.getPlayer(), dto.getAuthentication());
         return new Message("Player registered successfully");
     }
